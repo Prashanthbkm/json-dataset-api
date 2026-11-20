@@ -2,33 +2,48 @@
 
 A Spring Boot REST API for storing JSON dataset records in a relational database and querying them using dynamic **Group By** and **Sort By** operations.
 
+## Live Application
+
+- **Live Application:** https://json-dataset-api-4895.onrender.com/
+- **Swagger API Documentation:** https://json-dataset-api-4895.onrender.com/swagger-ui/index.html
+- **OpenAPI Specification:** https://json-dataset-api-4895.onrender.com/v3/api-docs
+- **GitHub Repository:** https://github.com/Prashanthbkm/json-dataset-api
+
+The application is deployed on Render and uses a MySQL-compatible TiDB Cloud database.
+
 ## Features
 
 - Insert JSON records into a named dataset.
-- Persist records in a MySQL relational database.
+- Persist records in a relational database.
 - Dynamically group records using any JSON field.
 - Dynamically sort records using any JSON field.
 - Support ascending (`asc`) and descending (`desc`) sorting.
 - Validate API requests and handle errors.
 - Interactive API documentation using Swagger / OpenAPI.
+- RESTful API design.
 
 ## Technology Stack
 
-- **Language:** Java 17
-- **Framework:** Spring Boot
-- **Database:** MySQL
-- **Persistence:** Spring Data JPA / Hibernate
-- **Build Tool:** Maven
-- **Testing:** JUnit 5 and Mockito
-- **API Documentation:** Swagger / OpenAPI
+| Component | Technology |
+|---|---|
+| Language | Java 17 |
+| Framework | Spring Boot 4.1.2 |
+| Database | MySQL / TiDB Cloud |
+| Persistence | Spring Data JPA / Hibernate |
+| Build Tool | Maven |
+| Testing | JUnit 5 and Mockito |
+| API Documentation | Swagger / OpenAPI |
+| Deployment | Render |
+| Containerization | Docker |
 
 ## Prerequisites
 
 Make sure the following are installed:
 
 - Java 17 or later
-- MySQL Server
+- MySQL Server (for local development)
 - Git (optional)
+- Maven (optional, Maven Wrapper is included)
 
 ## Database Configuration
 
@@ -43,18 +58,20 @@ Configure the following environment variables before starting the application:
 | Variable | Description |
 |---|---|
 | `DB_URL` | Database connection URL |
-| `DB_USERNAME` | MySQL username |
-| `DB_PASSWORD` | MySQL password |
+| `DB_USERNAME` | Database username |
+| `DB_PASSWORD` | Database password |
 
-Default database URL:
+Default local database URL:
 
 ```text
 jdbc:mysql://localhost:3306/json_dataset_db
 ```
 
-The application uses environment variables for database credentials. Do not commit passwords or other secrets to the repository.
+The application uses environment variables for database credentials. Do not commit passwords or other sensitive information to the repository.
 
-## How to Run the Application
+For the deployed application, TiDB Cloud provides the MySQL-compatible database connection.
+
+## How to Run the Application Locally
 
 ### 1. Clone the repository
 
@@ -74,13 +91,13 @@ Set `DB_URL`, `DB_USERNAME`, and `DB_PASSWORD` in your environment.
 
 ### 4. Start the application
 
-On Windows:
+**Windows:**
 
 ```cmd
 mvnw.cmd spring-boot:run
 ```
 
-On Linux / macOS:
+**Linux / macOS:**
 
 ```bash
 ./mvnw spring-boot:run
@@ -92,18 +109,10 @@ The application starts at:
 http://localhost:8080
 ```
 
-## API Documentation
-
-Interactive Swagger documentation:
+### 5. Open Swagger Documentation
 
 ```text
 http://localhost:8080/swagger-ui/index.html
-```
-
-OpenAPI specification:
-
-```text
-http://localhost:8080/v3/api-docs
 ```
 
 ## REST API Endpoints
@@ -199,13 +208,13 @@ The `groupBy` parameter dynamically determines the JSON field used for grouping.
 /api/dataset/{datasetName}/query?sortBy={field}&order={asc|desc}
 ```
 
-**Example Request — Ascending Order:**
+**Ascending Order:**
 
 ```http
 GET /api/dataset/employee_dataset/query?sortBy=age&order=asc
 ```
 
-**Example Request — Descending Order:**
+**Descending Order:**
 
 ```http
 GET /api/dataset/employee_dataset/query?sortBy=age&order=desc
@@ -253,7 +262,7 @@ Examples of invalid requests include:
 
 ## Running Tests
 
-Run the service unit tests using Maven:
+Run the service unit tests using Maven.
 
 **Windows:**
 
@@ -269,6 +278,16 @@ mvnw.cmd -Dtest=DatasetRecordServiceTest test
 
 The service tests cover record insertion, JSON validation, grouping, and ascending and descending sorting.
 
+## Deployment
+
+The application is deployed using Render with Docker.
+
+- Source code is maintained in a public GitHub repository.
+- Docker is used to build and run the Spring Boot application.
+- TiDB Cloud is used as the deployed MySQL-compatible database.
+- Database credentials are configured through Render environment variables.
+- The application uses the `PORT` environment variable provided by Render.
+
 ## Project Structure
 
 ```text
@@ -283,6 +302,7 @@ json-dataset-api/
 │   │   │   ├── exception/
 │   │   │   ├── repository/
 │   │   │   ├── service/
+│   │   │   ├── HomeController.java
 │   │   │   └── JsonDatasetApiApplication.java
 │   │   │
 │   │   └── resources/
@@ -291,6 +311,7 @@ json-dataset-api/
 │   └── test/
 │       └── java/com/freightfox/jsondatasetapi/
 │
+├── Dockerfile
 ├── pom.xml
 ├── mvnw
 ├── mvnw.cmd
